@@ -1,0 +1,18 @@
+version: '3'
+
+services:
+  db1:
+    image: mongo
+    environment:
+      MONGO_INITDB_ROOT_USERNAME: my_admin
+      MONGO_INITDB_ROOT_PASSWORD: my2019
+    ports:
+      - "27018:27017"  
+  api:
+    build: .
+    environment:
+      DB_URI: ${DB_URI} # .ENV FILE
+    ports:
+      - "3000:3000"
+    depends_on:
+      - db1
