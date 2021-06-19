@@ -27,7 +27,7 @@ pipeline {
                 // echo 'ssh to web server and tell it to pull new image'
                 sh 'docker stop my_container || true'
                 sh 'docker rm my_container || true'
-                sh 'docker run -d -p $HOST_PORT:3000 -e DB_URI=$DB_URI --network host --name my_container node-mongo'
+                sh 'docker run -d -e PORT=$HOST_PORT -e DB_URI=$DB_URI --network host --name my_container node-mongo'
             }
         }
         stage('Cleanup') {
