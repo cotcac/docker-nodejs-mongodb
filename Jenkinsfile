@@ -1,7 +1,7 @@
 pipeline {
     agent { dockerfile true }
     stages {
-         stage('Test') { 
+        stage('Test') {
             steps {
                 sh 'node --version'
                 echo 'echo Test....'
@@ -11,15 +11,15 @@ pipeline {
         }
         stage('build') {
             steps {
-                 echo 'echo Build docker image....'
+                echo 'echo Build docker image....'
                 sh 'docker build -t node-mongo .'
             }
         }
-        stage('Deploy') { 
+        stage('Deploy') {
             steps {
                 echo 'echo Deploy....'
-                echo 'Push new docker image to Repo'
-                echo 'ssh to web server and tell it to pull new image'
+                // echo 'Push new docker image to Repo'
+                // echo 'ssh to web server and tell it to pull new image'
                 sh 'docker stop my_container || true'
                 sh 'docker rm my_container || true'
                 sh 'docker run -d -p 3000:3000 -e DB_URI=mongodb://127.0.0.1:27017 --network host --name my_container node-mongo'
