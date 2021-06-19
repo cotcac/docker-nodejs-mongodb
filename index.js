@@ -35,7 +35,11 @@ const insertDocuments = function(db, callback) {
 }
 
 app.get("/", (req, res) => {
-  res.send("it works 2");
+  res.send(`
+  Env: ${process.env.NODE_ENV}
+  DB: ${process.env.url}
+  it works 2
+  `);
 });
 
 const port = process.env.PORT || 3000;

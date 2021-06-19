@@ -2,7 +2,6 @@ pipeline {
     agent { dockerfile true }
     environment {
         DB_URI = credentials('DB_URI')
-        HOST_PORT = 3001
     }
     stages {
         stage('Test') {
@@ -19,15 +18,26 @@ pipeline {
                 sh 'docker build -t node-mongo .'
             }
         }
-        stage('Deploy') {
-            // when { tag 'release-*' }
+        stage('Deploy devint') {
+            when { tag 'devint-*' }
+                environment { PORT = 3000 }
             steps {
-                echo 'echo Deploy....'
+                echo 'echo Deploy....DevInt'
                 // echo 'Push new docker image to Repo'
                 // echo 'ssh to web server and tell it to pull new image'
-                sh 'docker stop my_container || true'
-                sh 'docker rm my_container || true'
-                sh 'docker run -d -e PORT=$HOST_PORT -e DB_URI=$DB_URI --network host --name my_container node-mongo'
+                sh 'docker stop my_container_devint || true'
+                sh 'docker rm my_container_devint || true'
+                sh 'docker run -d -e PORT=$PORT -e DB_URI=$DB_URI --network host --name my_container_devint node-mongo'
+            }
+        }
+        stage('Deploy qa') {
+            when { tag 'qa-*' }
+            environment { PORT = 3001 }
+            steps {
+                echo 'echo Deploy QA'
+                sh 'docker stop my_container_qa || true'
+                sh 'docker rm my_container_qa || true'
+                sh 'docker run -d -e PORT=$PORT -e DB_URI=$DB_URI --network host --name my_container_qa node-mongo'
             }
         }
         stage('Cleanup') {
