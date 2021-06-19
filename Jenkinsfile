@@ -25,5 +25,10 @@ pipeline {
                 sh 'docker run -d -p 3000:3000 -e DB_URI=mongodb://127.0.0.1:27017 --network host --name my_container node-mongo'
             }
         }
+        stage('Cleanup') {
+            echo 'prune and cleanup'
+            sh 'npm prune'
+            sh 'rm node_modules -rf'
+        }
     }
 }
