@@ -35,7 +35,7 @@ const insertDocuments = function(db, callback) {
 }
 
 app.get("/", (req, res) => {
-  res.send("it works 123");
+  res.send("it works 1234");
 });
 
 const port = 3000;
