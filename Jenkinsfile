@@ -1,5 +1,5 @@
 pipeline {
-    agent { dockerfile true }
+    agent { image 'node:14-alpine' }
     environment {
         DB_URI = credentials('DB_URI')
     }
@@ -16,6 +16,19 @@ pipeline {
             steps {
                 echo 'echo Build docker image....'
                 sh 'docker build -t node-mongo .'
+            }
+        }
+        stage('Deploy pro') {
+            environment {
+                PORT = 3002
+                STAGE = 'production'
+            }
+            steps {
+                echo 'echo Deploy production'
+                sh 'docker stop my_container_pro || true'
+                sh 'docker rm my_container_pro || true'
+                /* groovylint-disable-next-line LineLength */
+                sh 'docker run -d -e PORT=$PORT -e STAGE=$STAGE -e DB_URI=$DB_URI --network host --name my_container_pro node-mongo'
             }
         }
         stage('Deploy devint') {
