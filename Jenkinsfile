@@ -16,6 +16,7 @@ pipeline {
             }
         }
         stage('Deploy') {
+            when { tag "release-*" }
             steps {
                 echo 'echo Deploy....'
                 // echo 'Push new docker image to Repo'
