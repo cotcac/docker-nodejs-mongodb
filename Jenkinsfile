@@ -22,7 +22,7 @@ pipeline {
             when { tag 'devint-*' }
                 environment {
                     PORT = 3000
-                    STAGE = DevInt
+                    STAGE = 'DevInt'
                 }
             steps {
                 echo 'echo Deploy....DevInt'
@@ -38,7 +38,7 @@ pipeline {
             when { tag 'qa-*' }
             environment {
                 PORT = 3001
-                STAGE = QA
+                STAGE = 'QA'
             }
             steps {
                 echo 'echo Deploy QA'
