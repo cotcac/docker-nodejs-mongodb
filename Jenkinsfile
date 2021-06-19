@@ -1,5 +1,5 @@
 pipeline {
-    agent { dockerfile true }
+    agent { docker { image 'node:14' } }
     environment {
         DB_URI = credentials('DB_URI')
     }
