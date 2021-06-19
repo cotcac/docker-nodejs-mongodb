@@ -36,9 +36,10 @@ const insertDocuments = function(db, callback) {
 
 app.get("/", (req, res) => {
   res.send(`
-  Env: ${process.env.NODE_ENV}
-  DB: ${process.env.url}
-  it works 2
+  Env: ${process.env.NODE_ENV} -
+  DB: ${url} -
+  Stage: ${process.env.STAGE} -
+  it works.
   `);
 });
 

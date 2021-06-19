@@ -20,24 +20,32 @@ pipeline {
         }
         stage('Deploy devint') {
             when { tag 'devint-*' }
-                environment { PORT = 3000 }
+                environment {
+                    PORT = 3000
+                    STAGE = DevInt
+                }
             steps {
                 echo 'echo Deploy....DevInt'
                 // echo 'Push new docker image to Repo'
                 // echo 'ssh to web server and tell it to pull new image'
                 sh 'docker stop my_container_devint || true'
                 sh 'docker rm my_container_devint || true'
-                sh 'docker run -d -e PORT=$PORT -e DB_URI=$DB_URI --network host --name my_container_devint node-mongo'
+                /* groovylint-disable-next-line LineLength */
+                sh 'docker run -d -e PORT=$PORT -e STAGE=$STAGE -e DB_URI=$DB_URI --network host --name my_container_devint node-mongo'
             }
         }
         stage('Deploy qa') {
             when { tag 'qa-*' }
-            environment { PORT = 3001 }
+            environment {
+                PORT = 3001
+                STAGE = QA
+            }
             steps {
                 echo 'echo Deploy QA'
                 sh 'docker stop my_container_qa || true'
                 sh 'docker rm my_container_qa || true'
-                sh 'docker run -d -e PORT=$PORT -e DB_URI=$DB_URI --network host --name my_container_qa node-mongo'
+                /* groovylint-disable-next-line LineLength */
+                sh 'docker run -d -e PORT=$PORT -e STAGE=$STAGE -e DB_URI=$DB_URI --network host --name my_container_qa node-mongo'
             }
         }
         stage('Cleanup') {
