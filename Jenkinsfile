@@ -86,7 +86,7 @@ pipeline {
                 echo 'prune and cleanup'
                 sh 'npm prune'
                 sh 'rm node_modules -rf'
-                sh 'docker rmi $registry:$BUILD_NUMBER'
+                sh 'docker rmi $registry:latest'
             }
         }
     }

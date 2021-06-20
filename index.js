@@ -4,14 +4,11 @@ const assert = require('assert');
 const MongoClient = require("mongodb").MongoClient;
 const url = process.env.DB_URI;
 
-// Database Name
-const dbName = "myprojectdatabase1";
-
 // Use connect method to connect to the server
 MongoClient.connect(url, function (err, client) {
   if(err) throw err;
   console.log("Connected successfully to server");
-  const db = client.db(dbName);
+  const db = client.db();
   insertDocuments(db, function() {
     client.close();
   });

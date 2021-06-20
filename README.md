@@ -1,3 +1,7 @@
+# Test app localy
+```
+DB_URI=mongodb://127.0.0.1:27017/test1 node .
+```
 # Docker Node Mongodb Example
 
 > Simple example of a dockerized Node/Mongodb app
@@ -22,12 +26,13 @@ docker-compose build
 ```
 // Build and run local
 docker build -t node-mongo .
-docker run -it -p 3000:3000 -e DB_URI=mongodb://127.0.0.1:27017 --network host node-mongo
-docker run -d -p 3000:3000 -e DB_URI=mongodb://127.0.0.1:27017 --network host node-mongo
+docker run -it -p 3000:3000 -e DB_URI=mongodb://127.0.0.1:27017/test1 --network host node-mongo
+docker run -d -p 3000:3000 -e DB_URI=mongodb://127.0.0.1:27017/test1 --network host node-mongo
 
 // Run image from docker hub. Remove image after exit with Ctr + C
-docker run --rm -e PORT=3005 -e DB_URI=mongodb://127.0.0.1:27017 --network host cotcac/node1:46
+docker run --rm -e PORT=3005 -e DB_URI=mongodb://127.0.0.1:27017/test1 --network host cotcac/node1:46
 ```
 Note: 127.0.0.1 = localhost so you can use localhost as well.
+
 
 # Add jenkins pileline.
