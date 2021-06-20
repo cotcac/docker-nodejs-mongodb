@@ -25,7 +25,7 @@ pipeline {
             // Build upload to github.
             steps {
                 script {
-                    dockerImage = docker.build registry + ':$BUILD_NUMBER'
+                    dockerImage = docker.build registry + ':latest'
                 }
             }
         }
