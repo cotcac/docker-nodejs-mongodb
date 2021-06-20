@@ -16,10 +16,13 @@ pipeline {
             }
         }
         stage('build') {
-            steps {
-                echo 'echo Build docker image....'
-                sh 'docker build -t node-mongo .'
-            }
+            // Build local image
+            // steps {
+            //     echo 'echo Build docker image....'
+            //     sh 'docker build -t node-mongo .'
+            // }
+
+            // Build upload to github.
             steps {
                 script {
                     dockerImage = docker.build registry + ':$BUILD_NUMBER'
@@ -33,13 +36,13 @@ pipeline {
             }
             steps {
                 echo 'echo Deploy production'
-                sh 'docker stop my_container_pro || true'
-                sh 'docker rm my_container_pro || true'
-                /* groovylint-disable-next-line LineLength */
-                sh 'docker run -d -e PORT=$PORT -e STAGE=$STAGE -e DB_URI=$DB_URI --network host --name my_container_pro node-mongo'
-            }
-            // Uploading Docker images into Docker Hub
-            steps {
+                // Deploy locally
+                // sh 'docker stop my_container_pro || true'
+                // sh 'docker rm my_container_pro || true'
+                // /* groovylint-disable-next-line LineLength */
+                // sh 'docker run -d -e PORT=$PORT -e STAGE=$STAGE -e DB_URI=$DB_URI --network host --name my_container_pro node-mongo'
+
+                // Uploading Docker images into Docker Hub
                 script {
                     /* groovylint-disable-next-line NestedBlockDepth */
                     docker.withRegistry( '', registryCredential ) {
@@ -83,8 +86,6 @@ pipeline {
                 echo 'prune and cleanup'
                 sh 'npm prune'
                 sh 'rm node_modules -rf'
-            }
-            steps {
                 sh 'docker rmi $registry:$BUILD_NUMBER'
             }
         }
