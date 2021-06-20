@@ -1,6 +1,9 @@
 pipeline {
     agent { docker { image 'node:14' } }
     environment {
+        registry = 'cotcac/node1'
+        registryCredential = 'dockerhub_auth'
+        dockerImage = ''
         DB_URI = credentials('DB_URI')
     }
     stages {
@@ -17,6 +20,11 @@ pipeline {
                 echo 'echo Build docker image....'
                 sh 'docker build -t node-mongo .'
             }
+            steps {
+                script {
+                    dockerImage = docker.build registry + ':$BUILD_NUMBER'
+                }
+            }
         }
         stage('Deploy pro') {
             environment {
@@ -29,6 +37,15 @@ pipeline {
                 sh 'docker rm my_container_pro || true'
                 /* groovylint-disable-next-line LineLength */
                 sh 'docker run -d -e PORT=$PORT -e STAGE=$STAGE -e DB_URI=$DB_URI --network host --name my_container_pro node-mongo'
+            }
+            // Uploading Docker images into Docker Hub
+            steps {
+                script {
+                    /* groovylint-disable-next-line NestedBlockDepth */
+                    docker.withRegistry( '', registryCredential ) {
+                        dockerImage.push()
+                    }
+                }
             }
         }
         stage('Deploy devint') {
@@ -66,6 +83,9 @@ pipeline {
                 echo 'prune and cleanup'
                 sh 'npm prune'
                 sh 'rm node_modules -rf'
+            }
+            steps {
+                sh 'docker rmi $registry:$BUILD_NUMBER'
             }
         }
     }
